@@ -9,27 +9,46 @@ public class Carro {
     Cores cor;
 
     void cadastrarCarros() {
-        marca = JOptionPane.showInputDialog("Marca: ");
-        ano = Integer.parseInt(JOptionPane.showInputDialog("Ano: "));
 
-        
-        int i = 1;
-        for (Cores cores : Cores.values()) {
-            i++;
+        marca = JOptionPane.showInputDialog("Marca: ").toUpperCase();
+        ano = Integer.parseInt(JOptionPane.showInputDialog("Ano: "));
+        Cores[] cores = Cores.values();
+        String[] corEscolhida = new String[cores.length];
+        for (int i = 0; i < cores.length; i++) {
+            corEscolhida[i] = cores[i].name();
 
         }
-        int opcaoCor = Integer.parseInt(JOptionPane.showInputDialog("\"1 - BRANCO"
-                + "\n2 - VERMELHO"
-                + "\n3 - PRATA"
-                + "\n4 - CINZA"
-                + "\n5 - PRETO"));
+        String corString = (String) JOptionPane.showInputDialog(null, "Selecione a cor do carro", "Cadastrar carro.",
+                JOptionPane.PLAIN_MESSAGE, null, corEscolhida, corEscolhida[0]);
 
+        cor = Cores.valueOf(corString);
+
+        if (marca.isEmpty() || ano == 0) {
+            JOptionPane.showMessageDialog(null, "Todos os atributos devem ser preenchidos.");
+            return;
+        }
     }
 
     void periodosDeFabricacao() {
         int anoInicial = Integer.parseInt(JOptionPane.showInputDialog("Digite o ano incial: "));
         int anoFinal = Integer.parseInt(JOptionPane.showInputDialog("Digite o ano final: "));
 
+    }
+
+    String imprimeperiodosDeFabricacao() {
+        return "Ano: " + ano + "\n";
+
+    }
+
+    String imprimeMarca() {
+        
+        return "Marca: " + marca  + "\n";
+        
+        
+    }
+
+    String imprimeCor() {
+        return "Cor: " + cor + "\n";
     }
 
 }
