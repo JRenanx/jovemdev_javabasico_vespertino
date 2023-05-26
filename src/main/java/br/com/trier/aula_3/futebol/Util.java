@@ -6,36 +6,48 @@ import javax.swing.JOptionPane;
 
 public class Util {
 
-    static String imprimeTimes(List<Time> times) {
-        String res = "";
-        for (Time time : times) {
-            res += times.toString();
-        }
-        return res;
+    public static void cadastraTime(List<Time> time) {
+        Time t = new Time();
+        t.cadastrar();
+        time.add(t);
     }
 
-    static Jogador artilheiro(List<Time> times) {
-        Jogador artilheiro = new Jogador();
-        artilheiro.setGolsMarcados(0);
+    public static Time escolheTime(List<Time> times) {
+        String menu = "Escolha um time\n";
+        int pos = 1;
         for (Time time : times) {
-            for (int i = 0; i < time.getJogadores().size(); i++) {
-                Jogador jogador = time.getJogadores().get(i);
-                if (jogador.getGolsMarcados() > artilheiro.getGolsMarcados()) {
-                    artilheiro.setNome(jogador.getNome());
-                    artilheiro.setNumeroCamisa(jogador.getNumeroCamisa());
-                    artilheiro.setGolsMarcados(jogador.getGolsMarcados());
-                }
-            }
-
+            menu += pos + " - " + time.getNome() + "\n";
+            pos++;
         }
-        return artilheiro;
+        int op = Integer.parseInt(JOptionPane.showInputDialog(menu));
+        return times.get(op - 1);
+
+    }
+
+    public static String artilheiroCampeonato(List<Time> times) {
+        Jogador artilheiro = new Jogador();
+        for (Time time : times) {
+            if (time.pegarArtilheiro().getGolsMarcados() > artilheiro.getGolsMarcados()) {
+                artilheiro = time.pegarArtilheiro();
+            }
+        }
+        return artilheiro.toString();
+    }
+
+    public static String timeMaisGols(List<Time> times) {
+        Time timeComMaisGols = new Time();
+        for (Time time : times) {
+            if (time.pegarGols() > timeComMaisGols.pegarGols()) {
+                timeComMaisGols = time;
+            }
+        }
+        return timeComMaisGols.getNome();
     }
 
     static int escolheOp() {
-        String menu = "1 - Cadastrar time\n" + "2 - Listar todos os jogadores de um time\n"
-                + "3 - Procurar artilheiro \n" + "4 - Mostrar time com mais gols\n" + "5 - Mostrar todos os times\n\n"
-                + "6 - Sair";
-
+        String menu = "1 - Cadastrar times\r\n" + "2 - Listar todos jogadores de um time\r\n"
+                + "3 - Verificar artilheiro do campeonato.\r\n"
+                + "4 - verificar qual time fez mais gols no campeonato\r\n" + "5 - Sair";
         return Integer.parseInt(JOptionPane.showInputDialog(menu));
     }
 

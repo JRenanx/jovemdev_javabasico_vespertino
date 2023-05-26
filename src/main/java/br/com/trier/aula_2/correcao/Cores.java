@@ -2,21 +2,28 @@ package br.com.trier.aula_2.correcao;
 
 import javax.swing.JOptionPane;
 
+import lombok.Getter;
+
+@Getter
 public enum Cores {
 
-    BRANCO(1, "Branco"), VERMELHO(2, "Vermelho"), AZUL(3, "Azul"), PRATA(4, "Prata"), PRETO(5, "Preto");
-
-    int codigo;
-    String descricao;
-
+    PRETO (1, "Preto"),
+    BRANCO (2, "Branco"),
+    AZUL (3, "Azul"),
+    VERMELHO (4, "Vermelho"),
+    PRATA (0, "Prata");
+    
+    private int codigo;
+    private String descricao;
+    
     private Cores(int codigo, String descricao) {
         this.codigo = codigo;
         this.descricao = descricao;
     }
-
-    static Cores buscaCodigo(int codigo) {
-        for (Cores cor : Cores.values()) {
-            if (codigo == cor.codigo) {
+    
+    static Cores buscaPorCodigo(int codigo) {
+        for(Cores cor: Cores.values()) {
+            if(codigo == cor.codigo) {
                 return cor;
             }
         }
@@ -24,12 +31,16 @@ public enum Cores {
     }
     
     static Cores escolheCor() {
-        String menu = "Escolha a cor: ";
+        String menu = "Escolhas uma cor:\n";
         for (Cores cor : Cores.values()) {
             menu += cor.codigo + " - " + cor.descricao + "\n";
-            
         }
-        int escolha = Integer.parseInt(JOptionPane.showInternalInputDialog(null, menu));
-        return buscaCodigo(escolha);
+        int escolha = Integer.parseInt(JOptionPane.showInputDialog(menu));
+        return buscaPorCodigo(escolha);
     }
+    
+    
+    
+    
+
 }

@@ -22,23 +22,20 @@ public class Principal {
             }
 
             if (op == 1) {
-                Time time = new Time().cadastraTime();
-                times.add(new Time());
+                Util.cadastraTime(times);
             }
             if (op == 2) {
-                JOptionPane.showMessageDialog(null, "");
+                
             }
             if (op == 3) {
-                JOptionPane.showMessageDialog(null, "");
+                Util.artilheiroCampeonato(times);
             }
             if (op == 4) {
-                JOptionPane.showInputDialog(null, Util.artilheiro(times));
+                Util.timeMaisGols(times);
             }
-            if (op == 5) {
-                JOptionPane.showMessageDialog(null, Util.imprimeTimes(times));
-            }
+        
 
-        } while (op != 6);
+        } while (op != 5);
 
     }
 }

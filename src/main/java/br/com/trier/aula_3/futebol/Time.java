@@ -1,5 +1,6 @@
 package br.com.trier.aula_3.futebol;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -12,52 +13,43 @@ import lombok.Setter;
 public class Time {
 
     private String nome;
-    private List<Jogador> jogadores;
-    private int golsTotais;
+    private List<Jogador> jogadores = new ArrayList<>();
 
-    public Time cadastraTime() {
-        jogadores = new ArrayList<>();
-        nome = JOptionPane.showInputDialog("Nome do time").toUpperCase();
-        if (!validaTime()) {
-            JOptionPane.showInputDialog("Nome invalido.");
-        }
-        
-        int opt = 1;
-
+    public void cadastrar() {
+        nome = JOptionPane.showInputDialog("Nome do time");
+        String op = "";
         do {
-            jogadores.add(new Jogador());
-            opt++;
-            if (opt == 11) {
-                int opt2 = Integer.parseInt(JOptionPane.showInputDialog("Deseja parar o cadastro de jogadores? 1- Sim e 2 - Não"));
-                if (opt2 == 1) {
-                    opt = 0;
-                }
-            }
-        } while (opt != 0 && opt < 3);
-
-        return this;
-    }
-    
-
-    public boolean validaTime() {
-        if (this.nome.trim().equals("")) {
-            JOptionPane.showInputDialog("Digite o nome do time:");
-            return false;
-        }
-        return true;
-    }
+            Jogador j = new Jogador();
+            j.cadastraJogador();
+            jogadores.add(j);
+            op = JOptionPane.showInputDialog("Deseja parar o cadastro de jogadores? S- Sim e N - Não" );
+        }while(op.equalsIgnoreCase("S"));;
+    }   
 
     public String jogadoresDoTime() {
-        String res = "";
+        String res = "Jogadores do time " + nome + "\n";
         for (Jogador jogador : jogadores) {
-            res += jogador.toString();
-
+            res += jogador;
         }
         return res;
     }
 
-    @Override
-    public String toString() {
-        return "Nome do time: " + nome + "\n";
+    public int pegarGols() {
+        int gols = 0;
+        for (Jogador jogador : jogadores) {
+            gols += jogador.getGolsMarcados();
+        }
+        return gols;
     }
+
+    public Jogador pegarArtilheiro() {
+        Jogador artilheiro = jogadores.get(0);
+        for (Jogador jogador : jogadores) {
+            if (jogador.getGolsMarcados() > artilheiro.getGolsMarcados()) {
+                artilheiro = jogador;
+            }
+        }
+        return artilheiro;
+    }
+
 }
