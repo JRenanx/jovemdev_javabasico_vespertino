@@ -1,34 +1,54 @@
 package br.com.trier.aula_3.livro;
 
-import java.util.List;
-
 import javax.swing.JOptionPane;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 public class Autor {
 
     private String nome;
     private int idade;
     private Sexo sexo;
+    
+    
 
-    public void cadastrarAutor(List<Autor> autores) {
-        nome = JOptionPane.showInputDialog("Digite o nome do autor:");
-        idade = Integer.parseInt(JOptionPane.showInputDialog("Digite a idade do autor:"));
+    public void cadastraAutor() throws Exception {
+        boolean validador = false;
+        while (!validador) {
+            try {
+                pegarNome();
+                pegarIdade();
+                pegarSexo();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Cadastro invalido.");
+                continue;
+            }
+            validador = true;
+        }
+    }
+
+    public void pegarNome() throws Exception {
+        nome = JOptionPane.showInputDialog("Digite o nome completo do Autor");
+    }
+
+    public void pegarIdade() throws Exception {
+        idade = Integer.parseInt(JOptionPane.showInputDialog("Digite a idade:"));
+        if (idade <= 0) {
+            throw new Exception("Idade inválida!");
+        }
+    }
+
+    public void pegarSexo() throws Exception {
         sexo = Sexo.escolheSexo();
-
-        Autor autor = new Autor();
-        autores.add(autor);
-
-        JOptionPane.showMessageDialog(null, "Autor cadastrado com sucesso.");
     }
 
     @Override
     public String toString() {
-
-        return "Nome: " + nome + "\nIdade: " + idade + "\nSexo: " + sexo;
+        return "Nome: " + nome + "\n    Idade: " + idade + "\n    Sexo: " + sexo.getDescricao() + "\n";
     }
+
+ 
 }

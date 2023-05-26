@@ -1,10 +1,14 @@
 package br.com.trier.aula_3.livro;
 
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
+import lombok.Getter;
+
+@Getter
 public enum Sexo {
 
-    MASCULINO(1, "MASCULINO"), FEMININO(2, "FEMININO");
+    MASCULINO(1, "Masculino"), FEMININO(2, "Feminino");
 
     private int codigo;
     private String descricao;
@@ -23,12 +27,23 @@ public enum Sexo {
         return null;
     }
 
-    static Sexo escolheSexo() {
-        String menu = "Escolhas uma cor:\n";
-        for (Sexo sexo : Sexo.values()) {
-            menu += sexo.codigo + " - " + sexo.descricao + "\n";
+    public static Sexo escolheSexo() {
+        Sexo[] sexo = Sexo.values();
+        String[] sexoDescricao = new String[sexo.length];
+        for (int i = 0; i < sexo.length; i++) {
+            sexoDescricao[i] = sexo[i].getCodigo() + " - " + sexo[i].getDescricao();
         }
-        int escolha = Integer.parseInt(JOptionPane.showInputDialog(menu));
-        return buscaPorCodigo(escolha);
+
+        JComboBox<String> comboBox = new JComboBox<>(sexoDescricao);
+        int escolheSexo = JOptionPane.showConfirmDialog(null, comboBox, "Escolha o sexo do autor",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (escolheSexo == JOptionPane.OK_OPTION) {
+            int selecionaSexo = comboBox.getSelectedIndex();
+            if (selecionaSexo >= 0 && selecionaSexo < sexo.length) {
+                return sexo[selecionaSexo];
+            }
+        }
+        return null;
     }
+
 }

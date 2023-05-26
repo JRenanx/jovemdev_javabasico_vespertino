@@ -7,170 +7,166 @@ import javax.swing.JOptionPane;
 
 public class Util {
 
-    public static void cadastrarLivro(List<Livro> livros, List<Autor> autores) {
-        String tituloLivro = JOptionPane.showInputDialog("Digite o título do livro:");
-        double precoLivro = Double.parseDouble(JOptionPane.showInputDialog("Digite o preço do livro:"));
-
-        int numAutores = Integer.parseInt(JOptionPane.showInputDialog("Selecione o número de autores (1 a 4):"));
-
-        ArrayList<Autor> autoresLivro = new ArrayList<>();
-        for (int i = 1; i <= numAutores; i++) {
-            String nomeAutor = JOptionPane.showInputDialog("Digite o nome do autor " + i + ":");
-
-            Autor autor = buscarAutorPorNome(autores, nomeAutor);
-            if (autor != null) {
-                autoresLivro.add(autor);
-            } else {
-                JOptionPane.showMessageDialog(null, "Autor não encontrado. Cadastre o autor primeiro.");
-                return;
-            }
-        }
-
-        Livro livro = new Livro();
-        livros.add(livro);
-
-        JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso.");
+    public static void cadastraAutor(List<Autor> autores) throws Exception {
+        Autor autor = new Autor();
+        autor.cadastraAutor();
+        autores.add(autor);
     }
 
-    public static void listarLivros(List<Livro> livros) {
-        if (livros.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nenhum livro cadastrado.");
-        } else {
-            StringBuilder output = new StringBuilder();
-            for (Livro livro : livros) {
-                output.append("Título: ").append(livro.getTitulo()).append("\n");
-                output.append("Preço: R$").append(livro.getPreco()).append("\n");
+    public static void cadastraLivro(List<Autor> autores, List<Livro> livros) throws Exception{
+        String titulo = JOptionPane.showInputDialog("Nome do Livro").toLowerCase();
+        double preco = Double.parseDouble(JOptionPane.showInputDialog("Informe o valor do livro"));
 
-                output.append("Autores:\n");
-                for (Autor autor : livro.getAutores()) {
-                    output.append("Nome: ").append(autor.getNome()).append("\n");
-                    output.append("Sexo: ").append(autor.getSexo()).append("\n");
-                    output.append("Idade: ").append(autor.getIdade()).append("\n");
+        Livro livro = new Livro(titulo, preco);
+
+        StringBuilder autorBuilder = new StringBuilder();
+        for (int i = 0; i < autores.size(); i++) {
+            autorBuilder.append((i + 1)).append(". ").append(autores.get(i).getNome()).append("\n");
+        }
+
+        int count = 0;
+        boolean maisAutores = true;
+        while (maisAutores && count < 4) {
+            int autorEscolhido;
+            do {
+                autorEscolhido = Integer.parseInt(
+                        JOptionPane.showInputDialog("Selecione o número do autor:\n" + autorBuilder.toString()));
+
+                if (autorEscolhido < 1 || autorEscolhido > autores.size()) {
+                    JOptionPane.showMessageDialog(null, "Número de autor inválido. Tente novamente.");
                 }
+            } while (autorEscolhido < 1 || autorEscolhido > autores.size());
 
-                output.append("-------------------------\n");
+            Autor autor = autores.get(autorEscolhido - 1);
+            livro.adicionarAutor(autor);
+
+            count++;
+
+            if (count < 4) {
+                String resposta = JOptionPane.showInputDialog(
+                        "Cadastrar mais um autor? ('S' / 'N')\n Autores cadastrados: " + count + " \n(Limite:4)");         
+                if (resposta.equalsIgnoreCase("n")) {
+                    maisAutores = false;
+                } 
+            } else {
+                JOptionPane.showMessageDialog(null, "Limite dos 4 autores atingido.");
             }
-            JOptionPane.showMessageDialog(null, output.toString());
         }
+
+        livros.add(livro);
     }
 
-    public static void pesquisarPorAutor(List<Livro> livros) {
-        String nomeAutor = JOptionPane.showInputDialog("Digite o nome do autor:");
-        boolean encontrado = false;
-        StringBuilder output = new StringBuilder();
+    public static String listaTodosLivros(List<Livro> livros) {
+        String res = "";
+        for (Livro livro : livros) {
+            res += livro.listaLivros();
+        }
+        return res;
+    }
+
+    public static void pesquisarLivrosPorAutor(List<Livro> livros) {
+        String Pesquis = JOptionPane.showInputDialog("Digite o nome do autor:");
+
+        boolean achou = false;
+        StringBuilder encontrados = new StringBuilder();
+
         for (Livro livro : livros) {
             for (Autor autor : livro.getAutores()) {
-                if (autor.getNome().equalsIgnoreCase(nomeAutor)) {
-                    output.append("Título: ").append(livro.getTitulo()).append("\n");
-                    output.append("Preço: R$").append(livro.getPreco()).append("\n");
-                    encontrado = true;
+                if (autor.getNome().equalsIgnoreCase(Pesquis)) {
+                    encontrados.append("- Título: ").append(livro.getTitulo()).append("\n").append("  Preço: ")
+                            .append(livro.getPreco()).append("\n\n");
+                    achou = true;
                     break;
                 }
             }
         }
-        if (!encontrado) {
-            output.append("Nenhum livro encontrado para o autor informado.");
+
+        if (achou) {
+            JOptionPane.showMessageDialog(null, "Livros do autor '" + Pesquis + "':\n\n" + encontrados.toString());
+        } else {
+            JOptionPane.showMessageDialog(null, "Nenhum livro encontrado do autor '" + Pesquis + "'.");
         }
-        JOptionPane.showMessageDialog(null, output.toString());
     }
 
-    public static void pesquisarPorFaixaDeValor(List<Livro> livros) {
-        double valorMinimo = Double.parseDouble(JOptionPane.showInputDialog("Digite o valor mínimo:"));
-        double valorMaximo = Double.parseDouble(JOptionPane.showInputDialog("Digite o valor máximo:"));
+    public static void LivrosPorValor(List<Livro> livros) {
+        double valorMin = Double.parseDouble(JOptionPane.showInputDialog("Digite o valor mínimo:"));
+        double valorMax = Double.parseDouble(JOptionPane.showInputDialog("Digite o valor máximo:"));
 
-        boolean encontrado = false;
-        StringBuilder output = new StringBuilder();
+        StringBuilder res = new StringBuilder(
+                "Livros com valor de R$ " + valorMin + " a R$ " + valorMax + ":\n\n");
+
+        boolean achouLivros = false;
+
         for (Livro livro : livros) {
-            if (livro.getPreco() >= valorMinimo && livro.getPreco() <= valorMaximo) {
-                output.append("Título: ").append(livro.getTitulo()).append("\n");
-                output.append("Preço: R$").append(livro.getPreco()).append("\n");
-                encontrado = true;
+            if (livro.getPreco() >= valorMin && livro.getPreco() <= valorMax) {
+                res.append("Título: ").append(livro.getTitulo()).append("\n");
+                res.append("Preço: R$ ").append(livro.getPreco()).append("\n");
+                res.append("\n");
+                achouLivros = true;
             }
         }
 
-        if (!encontrado) {
-            output.append("Nenhum livro encontrado na faixa de valor informada.");
+        if (!achouLivros) {
+            res.append("Nenhum livro encontrado com esse preço.");
         }
 
-        JOptionPane.showMessageDialog(null, output.toString());
+        JOptionPane.showMessageDialog(null, res.toString());
     }
 
-    public static void listarLivrosAutoresComCrianca(List<Livro> livros) {
-        boolean encontrado = false;
-        StringBuilder output = new StringBuilder();
+    public static void listarLivrosComCriancas(List<Livro> livros) {
+        StringBuilder res = new StringBuilder("Livros escritos por crianças (Menos de 12) :\n\n");
+
+        boolean achouLivros = false;
+
         for (Livro livro : livros) {
+            boolean autorCrianca = false;
             for (Autor autor : livro.getAutores()) {
                 if (autor.getIdade() <= 12) {
-                    output.append("Título: ").append(livro.getTitulo()).append("\n");
-                    output.append("Preço: R$").append(livro.getPreco()).append("\n");
-                    encontrado = true;
+                    autorCrianca = true;
                     break;
                 }
             }
+            if (autorCrianca) {
+                res.append("Título: ").append(livro.getTitulo()).append("\n");
+                res.append("Preço: R$ ").append(livro.getPreco()).append("\n");
+                res.append("Autores:\n");
+                for (Autor autor : livro.getAutores()) {
+                    res.append("- ").append(autor.getNome()).append("\n");
+                }
+                res.append("\n");
+                achouLivros = true;
+            }
         }
 
-        if (!encontrado) {
-            output.append("Nenhum livro encontrado cujos autores tenham crianças.");
+        if (!achouLivros) {
+            res.append("Nenhum livro encontrado com autores crianças (menos de 12).");
         }
 
-        JOptionPane.showMessageDialog(null, output.toString());
+        JOptionPane.showMessageDialog(null, res.toString());
     }
+    
 
-    public static void listarLivrosPorSexoAutor(List<Livro> livros) {
-        String sexoStr = JOptionPane.showInputDialog("Digite o sexo desejado (1 - Masculino, 2 - Feminino):");
-        Sexo sexo;
-
-        switch (sexoStr) {
-        case "1":
-            sexo = Sexo.MASCULINO;
-            break;
-        case "2":
-            sexo = Sexo.FEMININO;
-            break;
-        default:
-            JOptionPane.showMessageDialog(null, "Opção inválida. Listagem de livros cancelada.");
-            return;
-        }
-
-        boolean encontrado = false;
-        StringBuilder output = new StringBuilder();
+    public static String listarLivrosPorSexoAutores(List<Livro> livros) {
+        List<Livro> sexoLivro = new ArrayList<>();
+        Sexo sexo = Sexo.escolheSexo();
         for (Livro livro : livros) {
-            boolean mesmoSexo = true;
-            for (Autor autor : livro.getAutores()) {
-                if (autor.getSexo() != sexo) {
-                    mesmoSexo = false;
-                    break;
-                }
+            if (livro.sexoDoAutor(sexo)) {
+                sexoLivro.add(livro);
             }
-            if (mesmoSexo) {
-                output.append("Título: ").append(livro.getTitulo()).append("\n");
-                output.append("Preço: R$").append(livro.getPreco()).append("\n");
-                encontrado = true;
-            }
+        } String sexoteste ="";
+        for(Livro livro : sexoLivro) {
+            sexoteste += livro.getTitulo();
         }
-
-        if (!encontrado) {
-            output.append("Nenhum livro encontrado escrito apenas por ").append(sexo);
-        }
-
-        JOptionPane.showMessageDialog(null, output.toString());
+        return sexoteste;
     }
+    
+  
 
-    public static Autor buscarAutorPorNome(List<Autor> autores, String nome) {
-        for (Autor autor : autores) {
-            if (autor.getNome().equalsIgnoreCase(nome)) {
-                return autor;
-            }
-        }
-        return null;
-    }
-
-    static int escolheOp() {
+    public static int escolheMenu() {
         String menu = "1 - Cadastrar Autor \n" + "2 – Cadastrar Livros \n" + "3 - Listar todos os livros cadastrados \n"
                 + "4 - Pesquisar por autor \n" + "5 - Pesquisar por faixa de valor do livro \n"
                 + "6 - Listar todos os livros cujo autores tenham crianças \n"
                 + "7 – Listar todos os livros que foram escritos apenas por mulheres ou por homens\n\n" + "0 - Sair";
-
         return Integer.parseInt(JOptionPane.showInputDialog(menu));
     }
 }
