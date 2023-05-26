@@ -13,10 +13,21 @@ public class Principal {
         
         List<Autor> autores = new ArrayList<Autor>();
         List<Livro> livros = new ArrayList <Livro> ();
-        int op = 0;
-        
-        do {
-            op = Util.escolheMenu();
+        int op = 11;
+
+        while (op != 0) {
+
+            try {
+                int opcao = Util.escolheMenu();
+                if (op > 8 && op <= 0) {
+                    throw new Exception();
+                }
+                op = opcao;
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Opção inválida.");
+                continue;
+            }
+            
             switch (op) {
             case 1:
                 Util.cadastraAutor(autores);

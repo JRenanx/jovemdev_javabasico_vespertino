@@ -166,7 +166,8 @@ public class Util {
   
 
     public static int escolheMenu() {
-        String menu = "1 - Cadastrar Autor \n" + "2 – Cadastrar Livros \n" + "3 - Listar todos os livros cadastrados \n"
+        String menu = "********MENU********\n"
+                + "1 - Cadastrar Autor \n" + "2 – Cadastrar Livros \n" + "3 - Listar todos os livros cadastrados \n"
                 + "4 - Pesquisar por autor \n" + "5 - Pesquisar por faixa de valor do livro \n"
                 + "6 - Listar todos os livros cujo autores tenham crianças \n"
                 + "7 – Listar todos os livros que foram escritos apenas por mulheres ou por homens\n\n" + "0 - Sair";

@@ -23,24 +23,34 @@ public class Livro {
 
     public void cadastraLivro(List<Autor> autoresCadastrados) throws Exception {
 
-        preco = Double.parseDouble(JOptionPane.showInputDialog("Informe o valor do livro"));
-
-        pegarTitulo();
-        pegarPreco();
-        setAutores(new ArrayList<>());
+        boolean validador = false;
+        while (!validador) {
+            try {
+                pegarTitulo();
+                if (titulo.trim().equals("")) {
+                    throw new Exception();
+                }
+                pegarPreco();
+                setAutores(new ArrayList<>());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Cadastro de livro invalido.");
+            }
+            validador = true;
+        }
     }
 
     private void pegarTitulo() throws Exception {
         titulo = JOptionPane.showInputDialog("Titulo do livro:").toLowerCase();
-        if (titulo.trim().equals("")) {
-            throw new Exception("Digite um titulo!");
+        if (titulo.trim() == "") {
+            throw new Exception();
         }
+
     }
 
     private void pegarPreco() throws Exception {
         preco = Double.parseDouble(JOptionPane.showInputDialog("Digite o valor do livro:"));
         if (preco <= 0) {
-            throw new Exception("Preço inválido!");
+            throw new Exception();
         }
     }
 
