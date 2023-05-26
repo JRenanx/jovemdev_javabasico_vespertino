@@ -153,11 +153,14 @@ public class Util {
             if (livro.sexoDoAutor(sexo)) {
                 sexoLivro.add(livro);
             }
-        } String sexoteste ="";
+        } 
+        String sexoteste ="";
         for(Livro livro : sexoLivro) {
-            sexoteste += livro.getTitulo();
+            sexoteste += "Titulo: " + livro.getTitulo() + "\n";
+            
         }
         return sexoteste;
+        
     }
     
   
