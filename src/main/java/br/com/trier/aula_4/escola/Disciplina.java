@@ -10,12 +10,8 @@ import lombok.Setter;
 public class Disciplina {
 
     private String nome;
-    private int cargaHoraria;
+    private Integer cargaHoraria;
     private Professor professor;
-    
-    public Disciplina() {
-
-    }
     
     
 }

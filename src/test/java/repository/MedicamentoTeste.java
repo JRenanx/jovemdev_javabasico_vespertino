@@ -1,7 +1,5 @@
 package repository;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,16 +21,14 @@ class MedicamentoTeste {
 
     @BeforeEach
     void init() {
-        util =
-                new Util(
-                        new MedicamentoUtil(),
-                        new PessoaUtil());
+        util = new Util(new MedicamentoUtil(), new PessoaUtil());
     }
 
     @Test
     @DisplayName("Teste de cadastro de medicamentos")
     void testCadastroMedicamento() {
-        Medicamento medicamento = new Medicamento(1L, "Dorflex", Administracao.ORAL, new ArrayList<>(List.of("dor")), new ArrayList<>(List.of("dengue")));
+        Medicamento medicamento = new Medicamento(1L, "Dorflex", Administracao.ORAL, new ArrayList<>(List.of("dor")),
+                new ArrayList<>(List.of("dengue")));
 
         util.cadastrarMedicamento(medicamento);
 
@@ -60,7 +56,8 @@ class MedicamentoTeste {
     @Test
     @DisplayName("Teste para prescricao do medicamento")
     void testPrecriscaoMedicamento() {
-        Medicamento medicamento = new Medicamento(1L, "Dorflex", Administracao.ORAL, new ArrayList<>(List.of("dor")), new ArrayList<>(List.of("dengue")));
+        Medicamento medicamento = new Medicamento(1L, "Dorflex", Administracao.ORAL, new ArrayList<>(List.of("dor")),
+                new ArrayList<>(List.of("dengue")));
         util.cadastrarMedicamento(medicamento);
 
         Pessoa pessoa = new Pessoa(1L, "Renan", "dor", new ArrayList<>(List.of("sinusite")), new ArrayList<>());
@@ -78,18 +75,16 @@ class MedicamentoTeste {
 
     @Test
     void testPrecriscaoMedicamentoThrow() {
-        Medicamento medicamento = new Medicamento(1L, "Dorflex", Administracao.ORAL, new ArrayList<>(List.of("dor")), new ArrayList<>(List.of("dengue")));
+        Medicamento medicamento = new Medicamento(1L, "Dorflex", Administracao.ORAL, new ArrayList<>(List.of("dor")),
+                new ArrayList<>(List.of("dengue")));
         util.cadastrarMedicamento(medicamento);
 
         Pessoa pessoa = new Pessoa(1L, "Renan", "dor", new ArrayList<>(List.of("dengue")), new ArrayList<>());
         util.cadastrarPessoa(pessoa);
 
-        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> util.prescricaoDeMedicamento(pessoa, medicamento));
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class,
+                () -> util.prescricaoDeMedicamento(pessoa, medicamento));
         Assertions.assertEquals("Pessoa alérgica ao medicamento.", thrown.getMessage());
     }
-    
-   
-    
-
 
 }

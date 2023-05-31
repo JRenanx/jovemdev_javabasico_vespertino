@@ -1,15 +1,16 @@
 package br.com.trier.aula_4.escola;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Professor {
 
+    @NonNull
     private String nome;
-    private Formacao formacao;
+    @NonNull
+    private EnumFormacao formacao;
 
 }

@@ -1,6 +1,6 @@
 package br.com.trier.aula_4.escola;
 
-public enum Formacao {
+public enum EnumFormacao {
 
     GRADUACAO,
     ESPECIALIZACAO,
