@@ -6,35 +6,61 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class BancoTest {
+public class BancoTest {
 
-    Caixa caixa = new Caixa();
+    private Caixa caixa = new Caixa();
 
     @BeforeEach
-    void setUp() {
-        caixa.limpaTudo();
-
-        ContaCorrente corrente1 = new ContaCorrente(123, "390", "Ronaldo", 1000);
-        ContaEspecial especial1 = new ContaEspecial(321, "431", "Juninho", 1000);
-        ContaUniversitaria universitaria1 = new ContaUniversitaria(456, "431", "Kleber", 1000);
-
-        caixa.getContas().add(corrente1);
-        caixa.getContas().add(especial1);
-        caixa.getContas().add(universitaria1);
-
-        ContaCorrente corrente2 = new ContaCorrente(123, "431", "Bob", 1000);
-        ContaEspecial especial2 = new ContaEspecial(321, "431", "Bob", 1000);
-        ContaUniversitaria universitaria2 = new ContaUniversitaria(456, "EI", "Bob", 1000);
-
-        caixa.getContas().add(corrente2);
-        caixa.getContas().add(especial2);
-        caixa.getContas().add(universitaria2);
+    public void init() {
+        caixa.getContas().clear();
+        caixa.addConta(new ContaCorrente(1, 1, "Corrente", 1000));
+        caixa.addConta(new ContaEspecial(2, 2, "Especial", 1000, 1000));
+        caixa.addConta(new ContaUniversitaria(3, 3, "Universitario", 1000));
     }
 
     @Test
-    @DisplayName("Teste cadastra conta corrente")
-    void cadastraContaCorrente() {
-        ContaCorrente corrente2 = new ContaCorrente(1234, "C2", "Bob", 1000);
-        caixa.cadastraContaCorrente(corrente2);
-        assertEquals(7, caixa.getContas().size());
+    @DisplayName("Teste deposito conta universatario")
+    public void depositoCUni() {
+        Contas univ = caixa.getContas().get(2);
+        caixa.deposito(1000, univ);
+        assertEquals(2000, univ.getSaldo());
     }
+
+    @Test
+    @DisplayName("Teste deposito conta universatario")
+    public void saqueCEsp() {
+        Contas esp = caixa.getContas().get(1);
+        caixa.saque(2000, esp);
+        assertEquals(-1000, esp.getSaldo());
+    }
+
+    @Test
+    @DisplayName("Transferencia conta Corrente e Conta Univ")
+    public void transf1() {
+        Contas corr = caixa.getContas().get(0);
+        ContaUniversitaria univ = (ContaUniversitaria) caixa.getContas().get(2);
+        caixa.transferencia(10, corr, univ);
+        assertEquals(990, corr.getSaldo());
+        assertEquals(1010, univ.getSaldo());
+    }
+
+    @Test
+    @DisplayName("Transferencia conta Corrente e Conta Univ +2000")
+    public void transf2() {
+        Contas conCorrente = caixa.getContas().get(0);
+        ContaUniversitaria univ = (ContaUniversitaria) caixa.getContas().get(2);
+        caixa.deposito(300, conCorrente);
+        caixa.transferencia(1300, conCorrente, univ);
+        assertEquals(1300, conCorrente.getSaldo());
+        assertEquals(1000, univ.getSaldo());
+    }
+
+    @Test
+    @DisplayName("Teste saque negativo conta Corrente")
+    public void saqueNegativoContCorre() {
+        Contas conCorrente = caixa.getContas().get(0);
+        caixa.saque(1100, conCorrente);
+        assertFalse(false);
+    }
+
+}

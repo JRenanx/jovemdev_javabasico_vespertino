@@ -5,37 +5,11 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ContaCorrente {
+public class ContaCorrente extends Contas{
 
-    private Integer numero;
-    private String agencia;
-    private String nomeCorrentista;
-    protected double saldo;
-
-    public ContaCorrente(Integer numero, String agencia, String nomeCorrentista, double saldo) {
-        super();
-        this.numero = numero;
-        this.agencia = agencia;
-        this.nomeCorrentista = nomeCorrentista;
-        this.saldo = saldo;
+    public ContaCorrente(Integer numero, Integer agencia, String nomeCorrentista,
+            double saldo) {
+        super(numero, agencia, nomeCorrentista, saldo);
     }
-
-    public void deposito(double valorDeposito) {
-        saldo = saldo + valorDeposito;
-    }
-
-    public void saque(double valorSaque) {
-        saldo = saldo - valorSaque;
-    }
-
-    public void transferencia(ContaCorrente contaDestino, double valorTransferencia) {
-        if (saldo < valorTransferencia) {
-            return;
-        } else {
-            saldo -= valorTransferencia;
-            contaDestino.saldo += valorTransferencia;
-        }
-
-    }
-
+    
 }

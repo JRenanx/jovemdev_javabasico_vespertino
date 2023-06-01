@@ -1,23 +1,24 @@
 package br.com.trier.aula_6.Banco;
 
+import lombok.Getter;
 
-import lombok.Setter;
+@Getter
+public class ContaEspecial extends Contas {
 
+    private double limite;
 
-@Setter
-public class ContaEspecial extends ContaCorrente {
-
-    public ContaEspecial(Integer numero, String agencia, String nomeCorrentista, double saldo) {
+    public ContaEspecial(Integer numero, Integer agencia, String nomeCorrentista, double saldo, double limite) {
         super(numero, agencia, nomeCorrentista, saldo);
+        this.limite = limite;
     }
 
-    private double limiteSaldo = 500.0;
-
     @Override
-    public void saque(double valorSaque) {
-        if (valorSaque <= limiteSaldo) {
-            super.saque(valorSaque);
+    public boolean saque(double valor) {
+        if (getSaldo() + getLimite() >= valor) {
+            saldo = getSaldo() - valor;
+            return true;
         }
+        return false;
     }
 
 }
