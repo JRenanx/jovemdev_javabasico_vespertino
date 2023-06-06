@@ -1,10 +1,10 @@
 package br.com.trier.aula_6.farmacia;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
+@AllArgsConstructor
 public class Cliente {
 
     private String nome;

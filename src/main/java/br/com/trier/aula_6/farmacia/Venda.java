@@ -11,9 +11,11 @@ public class Venda {
     private Produto produto;
     private int quantidade;
     private String medico;
+    
 
-    public boolean verificaCliente(Cliente clinte) {
+    public boolean verificaCliente(Cliente cliente) {
         return cliente.getNome().equalsIgnoreCase(cliente.getNome());
     }
 
+   
 }

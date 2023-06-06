@@ -2,6 +2,7 @@ package br.com.trier.aula_6.Banco;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @AllArgsConstructor

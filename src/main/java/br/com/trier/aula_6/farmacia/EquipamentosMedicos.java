@@ -6,5 +6,4 @@ public class EquipamentosMedicos extends Produto {
         super(nome, estoque, valor);
     }
 
-    
 }
