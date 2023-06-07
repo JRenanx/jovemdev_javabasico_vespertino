@@ -35,8 +35,8 @@ order by c.nome;
 --8. Selecionar o nome dos candidatos a vereador que possuem "maria" no nome ordenados pelo nome.
 select c.nome 
 from candidato c 
-inner join cargo on cargo.id = c.cargo and cargo.nome = 'Vereeador'
-where c.nome like '%MARIA %' 
+inner join cargo on cargo.id = c.cargo and cargo.nome = 'Vereador'
+where c.nome like '%MARIA%' 
 order by c.nome ;
 
 --9. Selecionar o nome dos candidatos a vereador que iniciam com 'Y' - ordenado pelo nome.
@@ -162,7 +162,7 @@ select c.nome, c.qt_eleitores -
     FROM voto_invalido vi
     INNER JOIN cargo ON cargo.id = vi.cargo AND cargo.nome = 'Prefeito'
     WHERE vi.cidade = c.id)
-  ) AS abstencoes
+  ) AS abstencoes 
 FROM cidade c;
 
 --24. Selecionar o percentual de faltantes em cada cidade, ordenado pelo maior percentual.
