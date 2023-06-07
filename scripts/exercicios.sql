@@ -126,34 +126,66 @@ group by partido.sigla
 order by votos desc;
 
 --21. Selecionar a quantidade de votos registrados para prefeito na cidade de tubarão. Os votos registrados são considerados os votos para os candidatos, mais os votos brancos e nulos
-select cidade.nome, max(voto.voto)
-from cidade 
+select cidade.nome, sum(voto.voto) + (select vi.nulos + vi.brancos from voto_invalido vi where cargo.id = vi.cargo and vi.cidade = cidade.id) as votos
+from cidade
+inner join candidato on candidato.cidade = cidade.id and cidade.nome = 'TUBARÃO'
+inner join voto on voto.candidato = candidato.id
+inner join cargo on cargo.id = candidato.cargo and cargo.nome = 'Prefeito'
+group by cidade.nome, cargo.id, cidade.id;
+
+--22. Selecionar a quantidade de eleitores que deixaram de votar na cidade de tubarão.
+       
+select (select c.qt_eleitores 
+from cidade c 
+where c.nome = 'TUBARÃO') -
+        ((select sum (v.voto)
+        from voto v
+        inner join candidato cand on cand.id = v.candidato 
+        inner join cidade c on c.id = cand.cidade  and c.nome = 'TUBARÃO'
+        inner join cargo on cargo.id = cand.cargo and cargo.id = cand.cargo and cargo.nome ='Prefeito') +
+                (select (vi.brancos + vi.nulos)
+                FROM voto_invalido vi
+                inner join cargo on cargo.id = vi.cargo and cargo.nome = 'Prefeito'
+                inner join cidade c on c.id = vi.cidade and c.nome = 'TUBARÃO'))  as nao_votantes;
+
+--23. Selecionar a quantidade de eleitores que deixaram de votar em cada cidade, ordenado pela maior quantidade de faltantes.
+select c.nome, c.qt_eleitores - 
+  (
+    (SELECT COALESCE(SUM(v.voto), 0)
+    FROM voto v
+    INNER JOIN candidato cand ON cand.id = v.candidato 
+    INNER JOIN cidade ci ON ci.id = cand.cidade
+    INNER JOIN cargo ON cargo.id = cand.cargo AND cargo.nome = 'Prefeito'
+    WHERE ci.id = c.id)
+    +
+    (SELECT COALESCE(SUM(vi.brancos + vi.nulos), 0)
+    FROM voto_invalido vi
+    INNER JOIN cargo ON cargo.id = vi.cargo AND cargo.nome = 'Prefeito'
+    WHERE vi.cidade = c.id)
+  ) AS abstencoes
+FROM cidade c;
+
+--24. Selecionar o percentual de faltantes em cada cidade, ordenado pelo maior percentual.
+select cidade.nome, (cidade.qt_eleitores - (sum(voto.voto) + (select vi.nulos + vi.brancos from voto_invalido vi where cargo.id = vi.cargo and vi.cidade = cidade.id))) * 100 / cidade.qt_eleitores as votos
+from cidade
 inner join candidato on candidato.cidade = cidade.id
 inner join voto on voto.candidato = candidato.id
 inner join cargo on cargo.id = candidato.cargo and cargo.nome = 'Prefeito'
-group by cidade.nome;
-
---22. Selecionar a quantidade de eleitores que deixaram de votar na cidade de tubarão
-select sum (vi.nulos + vi.brancos) as total
-from cargo
-inner join voto_invalido vi on vi.cargo = cargo.id
-inner join cidade on cidade.id = vi.cidade and cidade.nome = 'TUBARÃO';
-
---23. Selecionar a quantidade de eleitores que deixaram de votar em cada cidade, ordenado pela maior quantidade de faltantes.
-select cidade.nome, sum (vi.nulos + vi.brancos) as total
-from cargo
-inner join voto_invalido vi on vi.cargo = cargo.id
-inner join cidade on cidade.id = vi.cidade
-group by cidade.nome
-order by total desc;
-
---24. Selecionar o percentual de faltantes em cada cidade, ordenado pelo maior percentual.
-select cidade.nome, sum ((vi.nulos + vi.brancos) ) as total
-from cargo
-inner join voto_invalido vi on vi.cargo = cargo.id
-inner join cidade on cidade.id = vi.cidade
-group by cidade.nome
-order by total desc;
+group by cidade.nome, cargo.id, cidade.id
+order by votos desc;
 
 --25. Selecionar o candidato a prefeito eleito de cada cidade, ordenado pelo nome da cidade.
-
+select cidade.nome, candidato.nome
+from cidade
+inner join candidato on candidato.cidade = cidade.id
+inner join voto on voto.candidato = candidato.id
+inner join cargo on cargo.id = candidato.cargo and cargo.nome = 'Prefeito'
+group by cidade.nome, candidato.nome, voto.voto,cidade.id 
+having voto.voto = (
+    select max(v.voto)
+    from voto as v
+    inner join candidato as c on v.candidato = c.id
+    inner join cargo as cg on cg.id = c.cargo and cg.nome = 'Prefeito'
+    where c.cidade = cidade.id
+)
+order by cidade.nome asc;
